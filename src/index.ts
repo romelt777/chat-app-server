@@ -11,4 +11,13 @@ const io = new Server(server, {
     cors: {
         origin: "*"
     }
-})
+});
+
+//middleware 
+app.use(express.json());
+app.use(cors());
+
+//socketIO
+//open connection
+//object to hold clients
+var clients: unknown = {};
