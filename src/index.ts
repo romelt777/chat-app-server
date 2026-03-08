@@ -2,14 +2,14 @@
 import express from "express";
 import http from "http";
 import cors from "cors";
-import { Server } from "socket.io";
+import { Server, Socket } from "socket.io";
 
 const app = express();
-const port = process.env.PORT || 5000;
+const port = Number(process.env.PORT) || 5000; // port must always be number for server.listen
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "*"
+        origin: "*" //allow all origins
     }
 });
 
@@ -17,22 +17,23 @@ const io = new Server(server, {
 app.use(express.json());
 app.use(cors());
 
-//socketIO
-//open connection
 //object to hold clients
-const clients: unknown = {};
+//key: string, value: Socket instance , for each specific client
+const clients: Record<string, Socket> = {};
 
-//socket is object of IO client
-io.on("connection", (socket) => {
+//when new client connects:
+io.on("connection", (socket: Socket) => {
     console.log("Connected");
     console.log(socket.id, " has joined");
-    socket.on("signin", (id) => {
+
+    //client registers with an ID
+    socket.on("signin", (id: string) => {
         console.log(id);
         clients[id] = socket;
     })
 
     //"message" is the event name
-    socket.on("message", (msg) => {
+    socket.on("message", (msg: { targetId: string;[key: string]: unknown }) => {
         console.log(msg);
         //finding message destination
         const targetId = msg.targetId;
@@ -42,7 +43,7 @@ io.on("connection", (socket) => {
     });
 });
 
-//initialize server, 0000 will launch on server on current IP address, (ipconfig)
+//0000 binds to all local interfaces, server is reachable on current IP address, (ipconfig)
 server.listen(port, "0.0.0.0", () => {
     console.log("server started...");
 })
