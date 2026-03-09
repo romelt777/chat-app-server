@@ -3,6 +3,7 @@ import express from "express";
 import http from "http";
 import cors from "cors";
 import { Server, Socket } from "socket.io";
+import router from "./route.js";
 
 const app = express();
 const port = Number(process.env.PORT) || 5000; // port must always be number for server.listen
@@ -16,6 +17,7 @@ const io = new Server(server, {
 //middleware 
 app.use(express.json());
 app.use(cors());
+app.use("/route", router);
 
 //object to hold clients
 //key: string, value: Socket instance , for each specific client
