@@ -27,10 +27,12 @@ const router = express.Router();
 router.route("/addImages").post(upload.single("img"), (req: Request, res: Response) => {
     //return response to flutter app
     try {
-        res.json({ path: req.file?.filename }); // returning path of image to flutter
+        return res.json({ path: req.file?.filename }); // returning path of image to flutter
     }
     catch (e) {
-        return res.json({ error: e });
+        //e is unknown and can be many types, check if error object before using
+        const error = e instanceof Error ? e.message : "Unknown Error";
+        return res.json({ error: error });
     }
 });
 
