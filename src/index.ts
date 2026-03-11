@@ -18,6 +18,7 @@ const io = new Server(server, {
 app.use(express.json());
 app.use(cors());
 app.use("/route", router);
+app.use("/uploads", express.static("uploads"));
 
 //object to hold clients
 //key: string, value: Socket instance , for each specific client
