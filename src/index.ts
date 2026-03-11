@@ -18,7 +18,7 @@ const io = new Server(server, {
 app.use(express.json());
 app.use(cors());
 app.use("/route", router);
-app.use("/uploads", express.static("uploads"));
+app.use("/uploads", express.static("uploads")); // uploads folder is now static file server, can be accessed 
 
 //object to hold clients
 //key: string, value: Socket instance , for each specific client
