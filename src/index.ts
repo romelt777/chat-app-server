@@ -4,7 +4,7 @@ import http from "http";
 import cors from "cors";
 import { Server, Socket } from "socket.io";
 import router from "./route.js";
-import { db } from "./firebase.js";
+import { getFireStore } from "./firebase.js";
 import admin from "firebase-admin";
 
 
@@ -57,6 +57,7 @@ io.on("connection", (socket: Socket) => {
             };
 
             //persist message to firestore
+            const db = getFireStore();
             await db.collection("messages").add(messageData);
         } catch (e) {
             console.error("Firestore save error:", e)

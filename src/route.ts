@@ -2,8 +2,7 @@
 import express from "express";
 import type { Request, Response } from "express";
 import multer from "multer";
-import { getBucket } from "./firebase.js";
-import { db } from "./firebase.js";
+import { getBucket, getFireStore } from "./firebase.js";
 
 
 
@@ -55,6 +54,8 @@ router.get("/messages/:chatId", async (req: Request, res: Response) => {
     const chatId = req.params.chatId;
 
     try {
+        const db = getFireStore();
+
         //getting snapshot of firebase DB
         const messagesSnap = await db
             .collection("messages")

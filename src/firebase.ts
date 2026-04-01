@@ -25,4 +25,6 @@ export function getBucket() {
 }
 
 //storage for messge
-export const db = admin.firestore();
+export function getFireStore() {
+    return admin.firestore();
+}
