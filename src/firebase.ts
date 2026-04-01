@@ -19,4 +19,6 @@ admin.initializeApp({
     storageBucket: bucketName,
 })
 
-export const bucket = admin.storage().bucket();
+export function getBucket() {
+    return admin.storage().bucket();
+}
