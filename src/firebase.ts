@@ -5,7 +5,7 @@ import "dotenv/config";
 
 //reading credential
 const serviceAccount = JSON.parse(
-    readFileSync("./serviceAccountKey.json", "utf-8")
+    readFileSync("./whatsapp-clone-c356a-firebase-adminsdk-fbsvc-bce532ba4c.json", "utf-8")
 );
 
 let bucketName: string = "";
