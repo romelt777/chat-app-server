@@ -19,6 +19,10 @@ admin.initializeApp({
     storageBucket: bucketName,
 })
 
+//bucket for images
 export function getBucket() {
     return admin.storage().bucket();
 }
+
+//storage for messge
+export const db = admin.firestore();

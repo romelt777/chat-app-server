@@ -4,6 +4,9 @@ import http from "http";
 import cors from "cors";
 import { Server, Socket } from "socket.io";
 import router from "./route.js";
+import { db } from "./firebase.js";
+import admin from "firebase-admin";
+
 
 const app = express();
 const port = Number(process.env.PORT) || 5000; // port must always be number for server.listen
@@ -36,13 +39,34 @@ io.on("connection", (socket: Socket) => {
     })
 
     //"message" is the event name
-    socket.on("message", (msg: { targetId: string;[key: string]: unknown }) => {
+    //when client sends message
+    socket.on("message", async (msg: { targetId: string;[key: string]: unknown }) => {
         console.log(msg);
         //finding message destination
         const targetId = msg.targetId;
+
+        //persist message in firestore
+        try {
+            //creating message object for firestore
+            const messageData = {
+                chatId: [msg.sourceId, targetId].sort().join("_"), //unique chat identifier
+                senderId: msg.sourceId,
+                text: msg.message || null,
+                imageUrl: msg.path || null,
+                createAt: admin.firestore.FieldValue.serverTimestamp()
+            };
+
+            //persist message to firestore
+            await db.collection("messages").add(messageData);
+        } catch (e) {
+            console.error("Firestore save error:", e)
+        }
+
+        //forward the message to recipient if they are connected
         if (clients[targetId]) {
             clients[targetId].emit("message", msg);
         }
+
     });
 });
 

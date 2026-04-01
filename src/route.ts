@@ -3,6 +3,8 @@ import express from "express";
 import type { Request, Response } from "express";
 import multer from "multer";
 import { getBucket } from "./firebase.js";
+import { db } from "./firebase.js";
+
 
 
 
@@ -48,6 +50,35 @@ router.route("/addImages").post(upload.single("img"), async (req: Request, res: 
         return res.json({ error: error });
     }
 });
+
+router.get("/messages/:chatId", async (req: Request, res: Response) => {
+    const chatId = req.params.chatId;
+
+    try {
+        //getting snapshot of firebase DB
+        const messagesSnap = await db
+            .collection("messages")
+            .where("chatId", "==", chatId) //only this chat
+            .orderBy("createdAt", "asc") //oldest first
+            .get();
+
+        //creating messages object to return to front end
+        const messages = messagesSnap.docs.map(doc => {
+            const data = doc.data();
+            return {
+                type: data.senderId === req.query.userId ? "source" : "destination",
+                message: data.text,
+                time: data.createdAt?.toDate().toISOString().substring(11, 16) || "", //HH:mm
+                path: data.imageUrl || null,
+            };
+        });
+
+        //send the messages to flutter
+        res.json({ messages });
+    } catch (e) {
+        res.status(500).json({ error: e instanceof Error ? e.message : "Unknown Error" });
+    }
+})
 
 //exporting
 export default router; 
