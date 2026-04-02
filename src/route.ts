@@ -5,8 +5,6 @@ import multer from "multer";
 import { getBucket, getFireStore } from "./firebase.js";
 
 
-
-
 //memory storage will keeofile in memory as buffer
 const upload = multer({
     storage: multer.memoryStorage()
@@ -53,9 +51,7 @@ router.route("/addImages").post(upload.single("img"), async (req: Request, res: 
 router.get("/messages/:chatId", async (req: Request, res: Response) => {
     const chatId = req.params.chatId;
 
-
     try {
-
         const db = getFireStore();
 
         //getting snapshot of firebase DB
@@ -65,7 +61,6 @@ router.get("/messages/:chatId", async (req: Request, res: Response) => {
             .orderBy("createdAt", "asc") //oldest first
             .get();
 
-        console.log("rom here" + chatId);
 
 
         const userId = Number(req.query.userId);
@@ -80,10 +75,6 @@ router.get("/messages/:chatId", async (req: Request, res: Response) => {
                 path: data.imageUrl || null,
             };
         });
-
-        console.log("Messages found:", messages.length);
-        console.log(messages);
-
 
         //send the messages to flutter
         res.json({ messages });
