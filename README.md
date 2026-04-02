@@ -1,10 +1,11 @@
 # Chat App Server (Backend)
 
-Node.js backend for real-time chat using Socket.IO.
+Node.js backend for real-time chat using Socket.IO., image uploads stored in Firebase Storage, and message persistence via Firebase Firestore.
 
 ## Features
 - Real-time messaging with Socket.IO
-- Image upload support
+- Image upload handling with Multer, stored in Firebase Storage
+- Persistent message history via Firebase Firestore
 - REST + WebSocket server
 
 ## Tech Stack
@@ -12,6 +13,8 @@ Node.js backend for real-time chat using Socket.IO.
 - TypeScript
 - Socket.IO
 - Multer
+- Firebase Storage
+- Firebase Firestore
 
 ## Setup
 ```bash
