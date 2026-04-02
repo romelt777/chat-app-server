@@ -47,13 +47,14 @@ io.on("connection", (socket: Socket) => {
 
         //persist message in firestore
         try {
+            console.log([msg.sourceId, targetId].sort().join("_"));
             //creating message object for firestore
             const messageData = {
                 chatId: [msg.sourceId, targetId].sort().join("_"), //unique chat identifier
                 senderId: msg.sourceId,
                 text: msg.message || null,
                 imageUrl: msg.path || null,
-                createAt: admin.firestore.FieldValue.serverTimestamp()
+                createdAt: admin.firestore.FieldValue.serverTimestamp()
             };
 
             //persist message to firestore

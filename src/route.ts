@@ -53,7 +53,9 @@ router.route("/addImages").post(upload.single("img"), async (req: Request, res: 
 router.get("/messages/:chatId", async (req: Request, res: Response) => {
     const chatId = req.params.chatId;
 
+
     try {
+
         const db = getFireStore();
 
         //getting snapshot of firebase DB
@@ -63,16 +65,25 @@ router.get("/messages/:chatId", async (req: Request, res: Response) => {
             .orderBy("createdAt", "asc") //oldest first
             .get();
 
+        console.log("rom here" + chatId);
+
+
+        const userId = Number(req.query.userId);
+
         //creating messages object to return to front end
         const messages = messagesSnap.docs.map(doc => {
             const data = doc.data();
             return {
-                type: data.senderId === req.query.userId ? "source" : "destination",
+                type: data.senderId === userId ? "source" : "destination",
                 message: data.text,
                 time: data.createdAt?.toDate().toISOString().substring(11, 16) || "", //HH:mm
                 path: data.imageUrl || null,
             };
         });
+
+        console.log("Messages found:", messages.length);
+        console.log(messages);
+
 
         //send the messages to flutter
         res.json({ messages });
